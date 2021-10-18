@@ -1,0 +1,44 @@
+%{
+int noOfLines=1;
+%}
+%x COMMENT
+%%
+\n noOfLines++;
+
+
+Get		printf("%d tGET\n",noOfLines);
+Set		printf("%d tSET\n",noOfLines);
+Function	printf("%d tFUNCTION\n",noOfLines);
+Print		printf("%d tPRINT\n",noOfLines);
+For		printf("%d tFOR\n",noOfLines);
+If		printf("%d tIF\n",noOfLines);
+Return		printf("%d tRETURN\n",noOfLines);
+
+
+","		printf("%d tCOMMA\n", noOfLines);
+"+"		printf("%d tPLUS\n", noOfLines);
+"*"		printf("%d tMUL\n", noOfLines);
+"++"		printf("%d tINC\n", noOfLines);
+"["		printf("%d tLBRAC\n", noOfLines);
+">"		printf("%d tGT\n", noOfLines);
+">="		printf("%d tGEQ\n", noOfLines);
+"=="		printf("%d tEQUALITY\n", noOfLines);
+"-"		printf("%d tMINUS\n", noOfLines);
+"/"		printf("%d tDIV\n", noOfLines);
+"--"		printf("%d tDEC\n", noOfLines);
+"]"		printf("%d tRBRAC\n", noOfLines);
+"<"		printf("%d tLT\n", noOfLines);
+"<="		printf("%d tLEQ\n", noOfLines);
+
+[A-Za-z_][A-Za-z0-9_]* printf("%d tIDENT (%s)\n",noOfLines,yytext);
+[0-9]+		printf("%d tNUM (%s)\n", noOfLines,yytext);
+
+"#"				printf("%d Comment start\n", noOfLines); BEGIN(COMMENT);
+<COMMENT>"\n"			BEGIN(INITIAL);
+<COMMENT>.                      
+%%
+int main()
+{
+ yylex();
+ return(0);
+}

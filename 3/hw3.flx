@@ -1,0 +1,68 @@
+%{
+#include "mertsasmaz-hw3.tab.h" 
+
+int lineNo = 1;
+%}
+%%
+
+['][^']*[']		    {
+                        yylval.stats.value = strdup(yytext);
+                        yylval.stats.value++;
+                        int len = strlen(yylval.stats.value);
+                        yylval.stats.value[len-1] = 0;
+                        yylval.stats.type = 's';
+                        return tSTRING;
+                    }
+
+["]Get["]		    return tGET;
+["]Set["]		    return tSET;
+["]Function["]		return tFUNCTION;
+["]Print["]		    return tPRINT;
+["]If["]		    return tIF;
+["]Return["]		return tRETURN;
+
+["]"+"["]           {        
+                        yylval.stats.line = lineNo;
+                        return tADD;
+                    }
+["]"-"["]           {        
+                        yylval.stats.line = lineNo;
+                        return tSUB;
+                    }        
+["]"*"["]           {        
+                        yylval.stats.line = lineNo;
+                        return tMUL;
+                    }        
+["]"/"["]           {        
+                        yylval.stats.line = lineNo;
+                        return tDIV;
+                    }        
+["]"++"["]		    return tINC;
+["]">"["]		    return tGT;
+["]"=="["]		    return tEQUALITY;
+["]"--"["]		    return tDEC;
+["]"<"["]		    return tLT;
+["]"<="["]		    return tLEQ;
+["]">="["]		    return tGEQ;
+
+
+["][_a-zA-Z][a-zA-Z0-9_]*["]	return tIDENT;
+				
+[0-9]+ |
+-[0-9]+ 		    {
+                        yylval.stats.value = strdup(yytext);
+                        yylval.stats.type = 'd';
+                        return tNUM; 
+                    }
+[0-9]+"."[0-9]+	|
+-[0-9]+"."[0-9]+	{
+                        yylval.stats.value = strdup(yytext);
+                        yylval.stats.type = 'f';
+                        return tNUM; 
+                    }
+	
+[ \t]+ 
+\n                  lineNo++;
+.			        return yytext[0];
+
+%%
